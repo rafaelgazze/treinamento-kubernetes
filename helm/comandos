@@ -1,0 +1,26 @@
+helm init --service-account tiller --wait
+
+
+kubectl create namespace prometheus
+helm install stable/prometheus \
+    --name prometheus \
+    --namespace prometheus \
+    --set alertmanager.persistentVolume.storageClass="gp2" \
+    --set server.persistentVolume.storageClass="gp2"
+
+kubectl create namespace grafana
+helm install stable/grafana \
+    --name grafana \
+    --namespace grafana \
+    --set persistence.storageClassName="gp2" \
+    --set adminPassword="admin" \
+    --set datasources."datasources\.yaml".apiVersion=1 \
+    --set datasources."datasources\.yaml".datasources[0].name=Prometheus \
+    --set datasources."datasources\.yaml".datasources[0].type=prometheus \
+    --set datasources."datasources\.yaml".datasources[0].url=http://prometheus-server.prometheus.svc.cluster.local \
+    --set datasources."datasources\.yaml".datasources[0].access=proxy \
+    --set datasources."datasources\.yaml".datasources[0].isDefault=true \
+    --set service.type=LoadBalancer
+
+
+https://github.com/helm/charts/blob/master/stable/prometheus/values.yaml

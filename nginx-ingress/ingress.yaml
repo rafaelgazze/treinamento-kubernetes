@@ -1,0 +1,13 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: nginx-ingress-teste-2
+spec:
+  rules:
+  - host: ingress2.kubernetes.hartbgroup.com.br
+    http:
+      paths:
+      - backend:
+          serviceName: flask-app
+          servicePort: 80
+        path: /treinamento

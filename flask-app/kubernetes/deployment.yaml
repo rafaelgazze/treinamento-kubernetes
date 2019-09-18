@@ -1,0 +1,29 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: flask-app
+spec:
+  replicas: 4
+  template:
+    metadata:
+      labels:
+        app: flask-app
+        version: flask
+    spec:
+      containers:
+        - name: flask-app
+          image: rafaelgazze/python-treinamento
+          ports:
+          - containerPort: 5000
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "100m"
+            limits:
+              memory: "256Mi"
+              cpu: "100m"
+          envFrom:
+          - configMapRef:
+              name: flask-app-configmap
+          - secretRef:
+              name: flask-app-secret
